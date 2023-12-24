@@ -12,9 +12,10 @@ public class GameManager : MonoBehaviour
     public Image image;
     public Button open, close;
     public int index;
-    public EventSystem eventSystem;
-    public DepthOfField depthOfField;
+        DepthOfField depthOfField;
     public PostProcessVolume postProcessVolume;
+    [Header("单独的盖子")]
+    public GameObject gaizi;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +48,13 @@ public class GameManager : MonoBehaviour
             value = distance,
             overrideState = true
         };
+        if (x == 6)
+        {
+            gaizi.transform.DOLocalMoveY(50, 2f).OnComplete(delegate
+            {
+                gaizi.SetActive(false);
+            });
+        }
         boxes[x].boxTop.DOLocalRotate(new Vector3(-120, 0, 0), 2f).OnComplete(delegate
         {
             index++;
@@ -106,8 +114,15 @@ public class GameManager : MonoBehaviour
             image.sprite = boxes[index].sprite;
             image.SetNativeSize();
             image.DOFade(1, 2f);
-
-            boxes[x].boxTop.DOLocalRotate(new Vector3(120, 0, 0), 2f,RotateMode.LocalAxisAdd).OnComplete(delegate
+            if (x == 6)
+            {
+                gaizi.SetActive(true);
+                gaizi.transform.DOLocalMoveY(0, 2f).OnComplete(delegate
+                {
+                    
+                });
+            }
+            boxes[x].boxTop.DOLocalRotate(new Vector3(120, 0, 0), 2f, RotateMode.LocalAxisAdd).OnComplete(delegate
                 {
                     open.interactable = true;
                     close.interactable = true;
@@ -131,7 +146,7 @@ public class GameManager : MonoBehaviour
         //         open.interactable = true;
         //         close.interactable = false;
         //     }
-       // // });
+        // // });
         boxes[index].boxButtom.DOLocalMoveY(boxes[x].buttomStartPos, 3f);
         float xx = 47 - index * 4.5f;
         Camera.main.DOFieldOfView(xx, 3f);
