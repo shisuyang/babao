@@ -33,15 +33,16 @@ public class MoveCameraByMouse : MonoBehaviour
 
 
     public bool RotateEnabled = true;//是否允许旋转
-  
+
 
     public bool autoRoat;
     public float autotime;
     public float direction = 1;
 
-
+    float time;
     void Start()
     {
+        time = 300;
         m_distance = (transform.position - target.position).magnitude;//获取摄像机初始距离
     }
     private void OnEnable()
@@ -54,15 +55,19 @@ public class MoveCameraByMouse : MonoBehaviour
     {
 
         MouseRotate();
-      
 
+        time -= Time.deltaTime;
+        if (time < 0)
+        {
+            SceneManager.LoadScene(0);
+        }
 
 
 
 
     }
 
-  
+
 
     public void MouseRotate()
     {
@@ -76,6 +81,17 @@ public class MoveCameraByMouse : MonoBehaviour
                 Vector2 v2 = UserInput.MianUserInput.mouse.delta.ReadValue();
                 x += v2.x * xSpeed * 0.02f;
                 y -= v2.y * ySpeed * 0.02f;
+                Debug.Log("鼠标");
+                time = 300;
+            }
+            else if (Input.touches.Length > 0)
+            {
+                Debug.Log("触摸");
+
+                Vector2 v3 = Input.touches[0].deltaPosition;
+                x += v3.x * xSpeed * 0.02f;
+                y -= v3.y * ySpeed * 0.02f;
+                time = 300;
             }
             else
             {
@@ -116,7 +132,7 @@ public class MoveCameraByMouse : MonoBehaviour
 
 
 
-   
+
 
 
 
